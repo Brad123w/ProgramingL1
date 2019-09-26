@@ -14,21 +14,30 @@
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
 
-            
+
             setInterval(mainloop, 1000 / 50);
         }
 
+        var paddleXpos = 0;
+        var paddleYpos = 0;
+        const PADDLE_WIDTH = 120;
+        const PADDLE_HEIGHT = 10;
+        var paddleXspeed = 5;
+        
 
         function mainloop() { // loop runs code 50 times per second 
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg
+            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'red'); //bg
 
         }
-        
+
         // func to draw colored rects on canvas
-        function colorRect(x, y, w, h, c) {
+        function colorRect(x, y, w, h,  c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         }
+        
 
     </script>
+
 </body>
