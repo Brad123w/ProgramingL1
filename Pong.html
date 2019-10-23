@@ -34,20 +34,20 @@
 
         var ballSize = 20;
         var ballXpos = 0;
-        var ballYpos = 0;
-        var ballXspeed = 8;
+        var ballYpos = 8;
+        var ballXspeed = 3;
         var ballYspeed = 3;
 
-        var ballCount = 10;
+        var ballCounter = 4;
+        var totalBalls = 10
 
         var balls = [];
 
         function mainloop() { // loop runs code 50 times per second 
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg
             colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'red'); //bg
-            colorRect(0, 0, 15, 15, 'green'); //ball
-
-            ballsDraw();
+            colorRect(ballXpos, ballXpos, ballSize, ballSize, 'green'); //ball
+ 
             ballsMove();
             paddleMove();
             if (startingpos) {
@@ -88,44 +88,40 @@
                 paddleXpos -= paddleXspeed;
             }
         }
-
-        function ballsDraw() {
-            balls.forEach(function(ball, index, array) {
-                colorRect(ball.ballXpos, ball.ballYpos, ball.ballSize, ball.ballSize, 'white');
-            });
+        function ballsMove() {
+            ballXpos += ballXspeed
+            ballYpos += ballYspeed
 
         }
 
-        function ballsMove() {
-            balls.forEach(function(ball, ) {
-                    ball.ballYpos += ball.ballYSpeed;
-                    if (ball.ballYpos > canvas.height) {
-                        ball.ballYpos = 0 - ball.ballSize;
 
-                    }
-                }
+        function addball() {
+            ballCounter++
+
+            const ballSize = 10
+            var ballXpos = Math.floor(Math.random() * (canvas.width - ballSize))
+
+        }
+
+        function randBall() {
+            var ballXpos = Math.floor(Math.random() * (canvas.width - ballSize));
+            var ballYpos = Math.floor(Math.random() * (canvas.height - ballSize));
+            var ballXSpeed = Math.floor(Math.random() * (15 - 2) + 2);
+            var ballYSpeed = Math.floor(Math.random() * (15 - 2) + 2);
+
+            var newBallObject = {
+                ballSize: ballSize,
+                ballXpos: ballXpos,
+                ballYpos: ballYpos,
+                ballXSpeed: ballXSpeed,
+                ballYSpeed: ballYSpeed,
             }
-
-
-            function randBall() {
-                var ballXpos = Math.floor(Math.random() * (canvas.width - ballSize));
-                var ballYpos = Math.floor(Math.random() * (canvas.height - ballSize));
-                var ballXSpeed = Math.floor(Math.random() * (15 - 2) + 2);
-                var ballYSpeed = Math.floor(Math.random() * (15 - 2) + 2);
-
-                var newBallObject = {
-                    ballSize: ballSize,
-                    ballXpos: ballXpos,
-                    ballYpos: ballYpos,
-                    ballXSpeed: ballXSpeed,
-                    ballYSpeed: ballYSpeed,
-                }
-            }
-            // func to draw colored rects on canvas
-            function colorRect(x, y, w, h, c) {
-                canvasContext.fillStyle = c;
-                canvasContext.fillRect(x, y, w, h);
-            }
+        }
+        // func to draw colored rects on canvas
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
 
     </script>
 
