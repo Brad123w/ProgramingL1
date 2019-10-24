@@ -22,8 +22,8 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 120;
-        const PADDLE_HEIGHT = 10;
+        const PADDLE_WIDTH = 40;
+        const PADDLE_HEIGHT = 40;
         var paddleXspeed = 5;
 
         const LEFT_KEY = 37;
@@ -32,11 +32,11 @@
         var rightKeyPressed = false;
         var startingpos = true;
 
-        var ballSize = 20;
+        const BALL_SIZE = 20;
         var ballXpos = 0;
         var ballYpos = 8;
-        var ballXspeed = 3;
-        var ballYspeed = 3;
+        var ballXspeed = 7;
+        var ballYspeed = 7;
 
         var ballCounter = 4;
         var totalBalls = 10
@@ -46,7 +46,7 @@
         function mainloop() { // loop runs code 50 times per second 
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg
             colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'red'); //bg
-            colorRect(ballXpos, ballXpos, ballSize, ballSize, 'green'); //ball
+            colorRect(ballXpos, ballYpos, BALL_SIZE, BALL_SIZE, 'green'); //ball
  
             ballsMove();
             paddleMove();
@@ -54,7 +54,7 @@
                 startPos();
                 startingpos = false;
             }
-        }
+        }1
 
         function keyPressed(evt) {
             if (evt.keyCode == LEFT_KEY) {
@@ -89,8 +89,13 @@
             }
         }
         function ballsMove() {
-            ballXpos += ballXspeed
-            ballYpos += ballYspeed
+            ballYpos += ballXspeed
+            
+            if(ballYpos > canvas.height){
+                ballYpos = 0 - BALL_SIZE;
+                ballXpos = Math.floor(Math.random()*(canvas.width - BALL_SIZE))
+                ballYspeed = Math.floor(Math.random()*(20 - 4) + 4)
+            }
 
         }
 
