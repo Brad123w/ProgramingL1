@@ -22,8 +22,8 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 40;
-        const PADDLE_HEIGHT = 40;
+        const PADDLE_WIDTH = 100;
+        const PADDLE_HEIGHT = 10;
         var paddleXspeed = 5;
 
         const LEFT_KEY = 37;
@@ -47,14 +47,15 @@
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg
             colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'red'); //bg
             colorRect(ballXpos, ballYpos, BALL_SIZE, BALL_SIZE, 'green'); //ball
- 
+
             ballsMove();
             paddleMove();
             if (startingpos) {
                 startPos();
                 startingpos = false;
             }
-        }1
+        }
+        1
 
         function keyPressed(evt) {
             if (evt.keyCode == LEFT_KEY) {
@@ -88,13 +89,14 @@
                 paddleXpos -= paddleXspeed;
             }
         }
+
         function ballsMove() {
             ballYpos += ballXspeed
-            
-            if(ballYpos > canvas.height){
+
+            if (ballYpos > canvas.height) {
                 ballYpos = 0 - BALL_SIZE;
-                ballXpos = Math.floor(Math.random()*(canvas.width - BALL_SIZE))
-                ballYspeed = Math.floor(Math.random()*(20 - 4) + 4)
+                ballXpos = Math.floor(Math.random() * (canvas.width - BALL_SIZE))
+                ballYspeed = Math.floor(Math.random() * (20 - 4) + 4)
             }
 
         }
