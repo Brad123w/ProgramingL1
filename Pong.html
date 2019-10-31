@@ -22,7 +22,7 @@
 
         var paddleXpos = 0;
         var paddleYpos = 0;
-        const PADDLE_WIDTH = 100;
+        const PADDLE_WIDTH = 90;
         const PADDLE_HEIGHT = 10;
         var paddleXspeed = 5;
 
@@ -32,14 +32,8 @@
         var rightKeyPressed = false;
         var startingpos = true;
 
-        const BALL_SIZE = 20;
-        var ballXpos = 0;
-        var ballYpos = 8;
-        var ballXspeed = 7;
-        var ballYspeed = 7;
-
         var ballCounter = 4;
-        var totalBalls = 10
+        var totalBalls = 4
 
         var lives = 3;
         var score = 0;
@@ -48,20 +42,16 @@
         function mainloop() { // loop runs code 50 times per second 
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg
             colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'red'); //bg
-            colorRect(ballXpos, ballYpos, BALL_SIZE, BALL_SIZE, 'green'); //ball
+//            colorRect(ballXpos, ballYpos, BALL_SIZE, BALL_SIZE, 'green'); //ball
             colorText('score:' + score, 7, 20, '20px Arial', 'white');
             colorText('lives:' + lives, 340, 20, '20px Arial', 'red');
 
             ballsMove();
+            ballDraw()
             paddleMove();
             if (startingpos) {
                 startPos();
                 startingpos = false;
-
-                if (ballYpos >= canvas.height + BALL_SIZE) {
-                    startingpos = true;
-                    lives--
-                }
             }
         }
 
@@ -87,7 +77,9 @@
         function startPos() {
             paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
             paddleYpos = canvas.height - PADDLE_HEIGHT * 2;
-            
+            for(i=0;i<totalBalls;i++){
+            makeBalls();
+        }
         }
 
 
@@ -99,25 +91,53 @@
                 paddleXpos -= paddleXspeed;
             }
         }
+        
+        
+        
+        function makeBalls(){
+            const BALL_SIZE = 20;
+            var ballXpos = Math.floor(Math.random()*(canvas.width - BALL_SIZE));
+            var ballYspeed = Math.floor(Math.random()*(10 - 3)) + 3;
+            var ballYpos = 0 - BALL_SIZE;
+       
+            var ball = {
+                BALL_SIZE: BALL_SIZE,
+                ballXpos: ballXpos,
+                ballYpos: ballYpos,
+                ballYspeed: ballYspeed
+            }
+            
+            balls.push(ball);
+        }
+        
+        function ballDraw(){
+            balls.forEach(function(ball,i){
+                colorRect(ball.ballXpos,ball.ballYpos,ball.BALL_SIZE,ball.BALL_SIZE,'orange');
+            });
+        }
 
         function ballsMove() {
-            ballYpos += ballXspeed
+            balls.forEach(function(ball,i){
+                
+                ball.ballYpos += ball.ballYspeed;
 
-            if (ballYpos > canvas.height) {
-                ballYpos = 0 - BALL_SIZE;
-                ballXpos = Math.floor(Math.random() * (canvas.width - BALL_SIZE))
-                ballYspeed = Math.floor(Math.random() * (20 - 4) + 4)
-            }
+                if (ball.ballYpos > canvas.height) {
+                    ball.ballYpos = 0 - ball.BALL_SIZE;
+                    ball.ballXpos = Math.floor(Math.random() * (canvas.width - ball.BALL_SIZE))
+                    ball.ballYspeed = Math.floor(Math.random() * (6 - 4) + 4)
+                }
 
-            if (ballXpos + BALL_SIZE > paddleXpos &&
-                ballXpos < paddleXpos + PADDLE_WIDTH &&
-                ballYpos + BALL_SIZE > paddleYpos &&
-                ballYpos < paddleYpos + PADDLE_HEIGHT) {
-                ballYpos = 0 - BALL_SIZE;
-                console.log('hit');
-                ballXpos = Math.floor(Math.random() * (canvas.width - BALL_SIZE));
-                score++;
-            }
+                if (ball.ballXpos + ball.BALL_SIZE > paddleXpos &&
+                    ball.ballXpos < paddleXpos + PADDLE_WIDTH &&
+                    ball.ballYpos + ball.BALL_SIZE > paddleYpos &&
+                    ball.ballYpos < paddleYpos + PADDLE_HEIGHT) {
+                    ball.ballYpos = 0 - ball.BALL_SIZE;
+                    console.log('hit');
+                    ball.ballXpos = Math.floor(Math.random() * (canvas.width - ball.BALL_SIZE));
+                    score++;
+
+                }
+            });
         }
         // func to draw colored rects on canvas
         function colorRect(x, y, w, h, c) {
