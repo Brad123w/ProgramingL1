@@ -1,11 +1,11 @@
 <!doctype html>
 
 <head>
-    <title>pongNess</title>
+    <title>DropeNess</title>
 </head>
 
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <canvas id="gameCanvas" width="300" height="600"></canvas>
 
     <script>
         var canvas, canvasContext;
@@ -20,11 +20,38 @@
             setInterval(mainloop, 1000 / 50);
         }
 
+        var name = '';
+        var namePass = false;
+        
+        while(namePass == false){
+        name = prompt('what is your name fellow human','');
+            if(name.length > 0 && name != null){
+                namePass = true;
+            }
+        }
+        var gameRun = true;
+        var diffculty = '';
+        var diffcultyPass = false;
+        //duffculty stuff
+        while(diffcultyPass == false){
+            diffculty = prompt('How hard are you gonna play?','hard');
+            if(diffculty == 'easy' || diffculty == 'hard'){
+               diffcultyPass = true;
+            }
+        }
+        var totalBalls = 0;
+        
+        if(diffculty == 'easy'){
+           totalBalls = 4;
+        } else {
+            totalBalls = 8;
+        }
+        // player vars
         var paddleXpos = 0;
         var paddleYpos = 0;
         const PADDLE_WIDTH = 90;
         const PADDLE_HEIGHT = 10;
-        var paddleXspeed = 5;
+        var paddleXspeed = 8;
 
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
@@ -32,19 +59,22 @@
         var rightKeyPressed = false;
         var startingpos = true;
 
-        var ballCounter = 4;
-        var totalBalls = 4
 
-        var lives = 3;
+        var ballCounter = 4;
+
+        var lives = 8;
         var score = 0;
         var balls = [];
+        
 
         function mainloop() { // loop runs code 50 times per second 
+            if(gameRun){
+                
             colorRect(0, 0, canvas.width, canvas.height, 'black'); //bg
-            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'red'); //bg
-//            colorRect(ballXpos, ballYpos, BALL_SIZE, BALL_SIZE, 'green'); //ball
+            colorRect(paddleXpos, paddleYpos, PADDLE_WIDTH, PADDLE_HEIGHT, 'green'); //bg
+            //            colorRect(ballXpos, ballYpos, BALL_SIZE, BALL_SIZE, 'green'); //ball
             colorText('score:' + score, 7, 20, '20px Arial', 'white');
-            colorText('lives:' + lives, 340, 20, '20px Arial', 'red');
+            colorText('lives:' + lives, 240, 20, '20px Arial', 'red');
 
             ballsMove();
             ballDraw()
@@ -53,7 +83,16 @@
                 startPos();
                 startingpos = false;
             }
-        }
+
+            if (lives <= 0) { //ending screen with score 
+                gameRun = false;
+            } 
+            }
+                else {
+                colorRect(0, 0, canvas.width, canvas.height, 'black');
+                colorText( name +' your score was: ' + score, canvas.width * 0.1, canvas.height / 2, '20px Arial', 'white')
+            }
+        } // end main loop func
 
 
         function keyPressed(evt) {
@@ -74,51 +113,51 @@
             }
         }
 
-        function startPos() {
+        function startPos() { // sets up the starting positions for player draws enemy array
             paddleXpos = canvas.width / 2 - PADDLE_WIDTH / 2;
             paddleYpos = canvas.height - PADDLE_HEIGHT * 2;
-            for(i=0;i<totalBalls;i++){
-            makeBalls();
-        }
+            for (i = 0; i < totalBalls; i++) {
+                makeBalls();
+            }
         }
 
 
-        function paddleMove() {
-            if (rightKeyPressed && paddleXpos + PADDLE_WIDTH < canvas.width) {
+        function paddleMove() { 
+            if (rightKeyPressed && paddleXpos + PADDLE_WIDTH < canvas.width) { // right paddle if not against canvas right edge
                 paddleXpos = paddleXpos + paddleXspeed;
             }
             if (leftKeyPressed && paddleXpos > 0) {
                 paddleXpos -= paddleXspeed;
             }
         }
-        
-        
-        
-        function makeBalls(){
+
+
+
+        function makeBalls() {
             const BALL_SIZE = 20;
-            var ballXpos = Math.floor(Math.random()*(canvas.width - BALL_SIZE));
-            var ballYspeed = Math.floor(Math.random()*(10 - 3)) + 3;
+            var ballXpos = Math.floor(Math.random() * (canvas.width - BALL_SIZE));
+            var ballYspeed = Math.floor(Math.random() * (10 - 3)) + 3;
             var ballYpos = 0 - BALL_SIZE;
-       
+
             var ball = {
                 BALL_SIZE: BALL_SIZE,
                 ballXpos: ballXpos,
                 ballYpos: ballYpos,
                 ballYspeed: ballYspeed
             }
-            
+
             balls.push(ball);
         }
-        
-        function ballDraw(){
-            balls.forEach(function(ball,i){
-                colorRect(ball.ballXpos,ball.ballYpos,ball.BALL_SIZE,ball.BALL_SIZE,'orange');
+
+        function ballDraw() {
+            balls.forEach(function(ball, i) {
+                colorRect(ball.ballXpos, ball.ballYpos, ball.BALL_SIZE, ball.BALL_SIZE, 'red');
             });
         }
-
+//function for balls to move
         function ballsMove() {
-            balls.forEach(function(ball,i){
-                
+            balls.forEach(function(ball, i) {
+
                 ball.ballYpos += ball.ballYspeed;
 
                 if (ball.ballYpos > canvas.height) {
@@ -137,8 +176,12 @@
                     score++;
 
                 }
+                if (ball.ballYpos >= canvas.height) {//loose life if hit bottom screen
+                    lives--
+                }
             });
         }
+
         // func to draw colored rects on canvas
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
